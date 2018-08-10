@@ -40,7 +40,7 @@ var polyfill = (function () {
      * @global
      * @param  {?|Array} objects
      *         Either the object to polyfill or an array of objects.
-     * @param  {Object|String} name
+     * @param  {Object|String} properties
      *         Either the name of the property or an object of names to values.
      * @param  {?} [value]
      *         The value of the property to polyfill if name is a string.
@@ -97,35 +97,50 @@ var polyfill = (function () {
      * }, null, (''.substr && '0b'.substr(-1) !== 'b'));
      * // https://github.com/es-shims/es5-shim/blob/master/es5-shim.js#L1933
      */
-    var polyfill = function doPolyfill(objects, name, value, settings, force) {
+    function polyfill(objects, properties, value, settings, force) {
 
-        var config;
+        var name;
 
         if (!Array.isArray(objects) || objects === Array.prototype) {
             objects = [objects];
         }
 
-        if (typeof name === "object") {
+        if (typeof properties === "string") {
 
-            Object.keys(name).forEach(function (key) {
-                doPolyfill(objects, key, name[key], value, settings);
-            });
+            name = properties;
+            properties = {};
+            properties[name] = value;
 
         } else {
 
-            config = assign(
-                {
-                    value: value
-                },
-                doPolyfill.defaults,
-                settings
-            );
-
-            if (force || typeof object[name] !== typeof value) {
-                Object.defineProperty(object, name, config);
-            }
+            force = settings;
+            settings = value;
 
         }
+
+        objects.forEach(function (object) {
+
+            Object.keys(properties).forEach(function (key) {
+
+                var val = properties[key];
+
+                if (force || typeof object[key] !== typeof val) {
+
+                    Object.defineProperty(
+                        object,
+                        key,
+                        assign(
+                            { value: val },
+                            polyfill.defaults,
+                            settings
+                        )
+                    );
+
+                }
+
+            });
+
+        });
 
     }
 
