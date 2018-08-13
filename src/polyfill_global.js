@@ -4,6 +4,43 @@
 
     polyfill(Object, {
 
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+        assign: function (target, ignore) { // .length = 2
+
+            if (target == null) { // TypeError if undefined or null
+
+                throw new TypeError(
+                    "Cannot convert undefined or null to object"
+                );
+
+            }
+
+            var to = Object(target);
+            var hasOwnProperty = Object.prototype.hasOwnProperty;
+            var index = 1;
+            var length = arguments.length;
+
+            while (index < length) {
+
+                var nextSource = arguments[index];
+
+                if (nextSource != null) { // Skip over if undefined or null
+                    for (var nextKey in nextSource) {
+                        // Avoid bugs when hasOwnProperty is shadowed
+                        if (hasOwnProperty.call(nextSource, nextKey)) {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+
+                index += 1;
+
+            }
+
+            return to;
+
+        },
+
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
         values: function (object) {
 

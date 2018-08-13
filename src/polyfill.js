@@ -2,35 +2,23 @@ var polyfill = (function () {
 
     "use strict";
 
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-    var assign = Object.assign || function (target, ignore) { // .length = 2
+    // Incomplete polyfill - does everything we need it to, but not everything
+    // that Object.assign() does.
+    var assign = Object.assign || function (source) {
 
-        if (target == null) { // TypeError if undefined or null
+        Array.prototype.slice.call(args, 1).forEach(function (arg) {
 
-            throw new TypeError(
-                "Cannot convert undefined or null to object"
-            );
+            if (arg !== null && arg !== undefined) {
 
-        }
+                Object.keys(arg).forEach(function (key) {
+                    source[key] = arg[key];
+                });
 
-        var to = Object(target);
-        var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-        for (var index = 1; index < arguments.length; index++) {
-
-            var nextSource = arguments[index];
-
-            if (nextSource != null) { // Skip over if undefined or null
-                for (var nextKey in nextSource) {
-                    // Avoid bugs when hasOwnProperty is shadowed
-                    if (hasOwnProperty.call(nextSource, nextKey)) {
-                        to[nextKey] = nextSource[nextKey];
-                    }
-                }
             }
-        }
 
-        return to;
+        });
+
+        return source;
 
     };
 
@@ -38,7 +26,7 @@ var polyfill = (function () {
      * Polyfills one or more objects with the property/properties defined.
      *
      * @global
-     * @param  {?|Array} objects
+     * @param  {Object|Array.<Object>} objects
      *         Either the object to polyfill or an array of objects.
      * @param  {Object|String} properties
      *         Either the name of the property or an object of names to values.
@@ -163,9 +151,6 @@ var polyfill = (function () {
         configurable: false,
         writable: false
     });
-
-    // Had to re-create it anyway, may as well polyfill it.
-    polyfill(Object, "assign", assign);
 
     return polyfill;
 
