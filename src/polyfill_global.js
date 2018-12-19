@@ -57,6 +57,36 @@
                 return [key, object[key]];
             });
 
+        },
+
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries
+        fromEntries: function (entries) {
+
+            return Array.prototype.reduce.call(
+                entries,
+                function (object, entry) {
+
+                    if (Object(pair) !== pair) {
+
+                        throw new TypeError(
+                            "iterable for fromEntries should yield objects"
+                        );
+
+                    }
+
+                    Object.defineProperty(object, entry[0], {
+                        configurable: true,
+                        enumerable: true,
+                        writable: true,
+                        value: entry[1]
+                    });
+
+                    return object;
+
+                },
+                {}
+            );
+
         }
 
     });
