@@ -6,7 +6,7 @@ var polyfill = (function () {
     // that Object.assign() does.
     var assign = Object.assign || function (source) {
 
-        Array.prototype.slice.call(args, 1).forEach(function (arg) {
+        Array.prototype.slice.call(arguments, 1).forEach(function (arg) {
 
             if (arg !== null && arg !== undefined) {
 
