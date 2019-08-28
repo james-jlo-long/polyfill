@@ -112,7 +112,7 @@
 
                 element = element.parentElement || element.parentNode;
 
-            } while (element !== null);
+            } while (element !== null && element.nodeType === 1);
 
         }
 
