@@ -66,7 +66,7 @@
                 entries,
                 function (object, entry) {
 
-                    if (Object(pair) !== pair) {
+                    if (Object(entry) !== entry) {
 
                         throw new TypeError(
                             "iterable for fromEntries should yield objects"
